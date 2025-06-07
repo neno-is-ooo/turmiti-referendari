@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referendum 2025 - Turmiti Referendari</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <style>
+        @font-face {
+            font-family: 'Monaspace Krypton';
+            src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff2') format('woff2');
+            font-weight: 400;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Monaspace Krypton', monospace;
+            background: #0d0d0d;
+            color: #d9d9d9;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 90%, rgba(255, 0, 128, 0.08), transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(0, 255, 136, 0.08), transparent 50%),
+                radial-gradient(circle at 35% 65%, rgba(255, 255, 255, 0.03), transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        #main-canvas {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 50px rgba(0,255,136,0.5);
+            z-index: 2;
+        }
+        
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(13,13,13,0.95);
+            border: 2px solid #00ff88;
+            padding: 20px;
+            width: 320px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 30px rgba(0,255,136,0.3);
+            z-index: 10;
+        }
+        
+        .title {
+            font-size: 1.3rem;
+            color: #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px #00ff88;
+        }
+        
+        .subtitle {
+            font-size: 0.8rem;
+            color: #088;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .vote-grid {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .vote-item {
+            padding: 10px;
+            background: rgba(0,255,255,0.05);
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+        
+        .vote-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #0aa;
+            margin-bottom: 5px;
+        }
+        
+        .vote-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .vote-btn {
+            flex: 1;
+            padding: 6px;
+            background: rgba(0,255,255,0.1);
+            border: 1px solid rgba(0,255,255,0.3);
+            color: #0ff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        
+        .vote-btn:hover:not(:disabled) {
+            background: rgba(0,255,255,0.2);
+        }
+        
+        .vote-btn.active.yes {
+            background: #0f0;
+            color: #000;
+            border-color: #0f0;
+            font-weight: bold;
+        }
+        
+        .vote-btn.active.no {
+            background: #f00;
+            color: #000;
+            border-color: #f00;
+            font-weight: bold;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            display: grid;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            padding: 10px;
+            background: #00ff88;
+            border: none;
+            color: #0d0d0d;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover:not(:disabled) {
+            background: #ff0080;
+            box-shadow: 0 0 20px #ff0080;
+            color: #fff;
+        }
+        
+        .control-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+        
+        .speed-control {
+            margin: 15px 0;
+        }
+        
+        .speed-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #0ff;
+            margin-bottom: 5px;
+        }
+        
+        .speed-slider {
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .stats-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(13,13,13,0.95);
+            border: 2px solid #00ff88;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 0 30px rgba(0,255,136,0.3);
+        }
+        
+        .stats-title {
+            color: #00ff88;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .population-grid {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .population-item {
+            padding: 10px;
+            background: rgba(0,255,255,0.05);
+            border: 1px solid rgba(0,255,255,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pop-identity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pop-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        
+        .pop-name {
+            font-size: 0.9rem;
+            color: #0ff;
+        }
+        
+        .pop-stats {
+            text-align: right;
+        }
+        
+        .pop-count {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .pop-growth {
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+        
+        .growth-positive { color: #0f0; }
+        .growth-negative { color: #f00; }
+        .growth-neutral { color: #ff0; }
+        
+        .relations-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 350px;
+            right: 340px;
+            background: rgba(0,0,0,0.95);
+            border: 2px solid #0ff;
+            padding: 15px;
+            box-shadow: 0 0 30px rgba(0,255,255,0.5);
+        }
+        
+        .relations-title {
+            color: #00ff88;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .relations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .relation-item {
+            padding: 8px;
+            background: rgba(0,255,255,0.05);
+            border-left: 3px solid;
+        }
+        
+        .relation-positive { border-left-color: #0f0; }
+        .relation-negative { border-left-color: #f00; }
+        .relation-neutral { border-left-color: #ff0; }
+        
+        @media (max-width: 768px) {
+            .control-panel {
+                width: calc(100% - 20px);
+                left: 10px;
+                max-height: 40vh;
+                font-size: 0.9rem;
+            }
+            
+            .stats-panel {
+                display: none;
+            }
+            
+            .relations-panel {
+                left: 10px;
+                right: 10px;
+                font-size: 0.8rem;
+                max-height: 25vh;
+                overflow-y: auto;
+            }
+            
+            #main-canvas {
+                width: 90vw;
+                height: 90vw;
+                max-width: 400px;
+                max-height: 400px;
+            }
+            
+            .title {
+                font-size: 1.1rem;
+            }
+            
+            .vote-item {
+                margin: 5px 0;
+                padding: 5px;
+            }
+            
+            .relations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                gap: 5px;
+            }
+            
+            .control-btn {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        .info-display {
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(0,255,255,0.05);
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        .info-label { color: #d9d9d9; opacity: 0.7; }
+        .info-value { color: #00ff88; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <canvas id="main-canvas"></canvas>
+    
+    <div class="control-panel">
+        <h1 class="title">TURMITI REFERENDARI</h1>
+        <p class="subtitle">
+            Ogni identità cresce nel suo quadrante.<br>
+            Le interdipendenze Lotka-Volterra determinano il destino collettivo.
+        </p>
+        
+        <div class="vote-grid">
+            <div class="vote-item">
+                <label class="vote-label">Q1: Articolo 18 (Jobs Act)</label>
+                <div class="vote-buttons">
+                    <button class="vote-btn" data-q="1" data-vote="yes">SÌ</button>
+                    <button class="vote-btn" data-q="1" data-vote="no">NO</button>
+                </div>
+            </div>
+            
+            <div class="vote-item">
+                <label class="vote-label">Q2: Piccole Imprese</label>
+                <div class="vote-buttons">
+                    <button class="vote-btn" data-q="2" data-vote="yes">SÌ</button>
+                    <button class="vote-btn" data-q="2" data-vote="no">NO</button>
+                </div>
+            </div>
+            
+            <div class="vote-item">
+                <label class="vote-label">Q3: Contratti a Termine</label>
+                <div class="vote-buttons">
+                    <button class="vote-btn" data-q="3" data-vote="yes">SÌ</button>
+                    <button class="vote-btn" data-q="3" data-vote="no">NO</button>
+                </div>
+            </div>
+            
+            <div class="vote-item">
+                <label class="vote-label">Q4: Sicurezza Lavoro</label>
+                <div class="vote-buttons">
+                    <button class="vote-btn" data-q="4" data-vote="yes">SÌ</button>
+                    <button class="vote-btn" data-q="4" data-vote="no">NO</button>
+                </div>
+            </div>
+            
+            <div class="vote-item">
+                <label class="vote-label">Q5: Cittadinanza</label>
+                <div class="vote-buttons">
+                    <button class="vote-btn" data-q="5" data-vote="yes">SÌ</button>
+                    <button class="vote-btn" data-q="5" data-vote="no">NO</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="start-btn" disabled>INIZIA CRESCITA</button>
+            <button class="control-btn" id="step-btn" disabled>PASSO SINGOLO</button>
+            <button class="control-btn" id="reset-btn">RESET</button>
+        </div>
+        
+        <div class="speed-control">
+            <label class="speed-label">
+                Velocità: <span id="speed-value">1.0</span>x
+            </label>
+            <input type="range" class="speed-slider" id="speed-slider" 
+                   min="0.1" max="5" step="0.1" value="1">
+        </div>
+        
+        <div class="info-display">
+            <div class="info-item">
+                <span class="info-label">Generazione:</span>
+                <span class="info-value" id="generation">0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Stato Sistema:</span>
+                <span class="info-value" id="system-state">EQUILIBRIO</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stats-panel">
+        <h2 class="stats-title">POPOLAZIONI</h2>
+        <div class="population-grid" id="population-display">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+    
+    <div class="relations-panel">
+        <h3 class="relations-title">RELAZIONI ATTIVE</h3>
+        <div class="relations-grid" id="relations-display">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        const isMobile = window.innerWidth <= 768;
+        const CELL_SIZE = isMobile ? 3 : 5;
+        const GRID_SIZE = isMobile ? 100 : 120; // Smaller grid for mobile
+        const SECTOR_WIDTH = GRID_SIZE / 3;
+        const SECTOR_HEIGHT = GRID_SIZE / 2;
+        
+        const IDENTITIES = ['dipendente', 'precario', 'imprenditore', 'straniero', 'giovane', 'pensionato'];
+        const COLORS = {
+            dipendente: '#00ffff',
+            precario: '#ff8800',
+            imprenditore: '#00ff00',
+            straniero: '#ff00ff',
+            giovane: '#ffff00',
+            pensionato: '#8888ff'
+        };
+        
+        // Hexagonal sector layout
+        const SECTORS = {
+            dipendente: {row: 0, col: 0},
+            precario: {row: 0, col: 1},
+            imprenditore: {row: 0, col: 2},
+            straniero: {row: 1, col: 0},
+            giovane: {row: 1, col: 1},
+            pensionato: {row: 1, col: 2}
+        };
+        
+        // Global state
+        let votes = {1: null, 2: null, 3: null, 4: null, 5: null};
+        let grid = [];
+        let populations = {};
+        let turmites = {};
+        let generation = 0;
+        let running = false;
+        let speed = 1;
+        let intervalId = null;
+        
+        // Lotka-Volterra parameters
+        let growthRates = {};
+        let carryingCapacity = {};
+        let interactions = {};
+        
+        // Canvas setup
+        const canvas = document.getElementById('main-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = GRID_SIZE * CELL_SIZE;
+        canvas.height = GRID_SIZE * CELL_SIZE;
+        
+        // Initialize grid
+        function initializeGrid() {
+            grid = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(null));
+            
+            // Draw sector boundaries
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            
+            // Vertical lines
+            for (let i = 1; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * SECTOR_WIDTH * CELL_SIZE, 0);
+                ctx.lineTo(i * SECTOR_WIDTH * CELL_SIZE, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Horizontal line
+            ctx.beginPath();
+            ctx.moveTo(0, SECTOR_HEIGHT * CELL_SIZE);
+            ctx.lineTo(canvas.width, SECTOR_HEIGHT * CELL_SIZE);
+            ctx.stroke();
+        }
+        
+        // Growth Turmite class
+        class GrowthTurmite {
+            constructor(identity) {
+                this.identity = identity;
+                this.color = COLORS[identity];
+                
+                // Start at center of sector
+                const sector = SECTORS[identity];
+                this.centerX = sector.col * SECTOR_WIDTH + SECTOR_WIDTH / 2;
+                this.centerY = sector.row * SECTOR_HEIGHT + SECTOR_HEIGHT / 2;
+                
+                // Initialize with small cluster
+                this.cells = new Set();
+                
+                // Start with 3x3 cluster
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                        const x = Math.floor(this.centerX + dx);
+                        const y = Math.floor(this.centerY + dy);
+                        this.cells.add(`${x},${y}`);
+                        grid[y][x] = identity;
+                    }
+                }
+                
+                this.population = this.cells.size;
+                this.fitness = 1.0;
+                
+                // Turmite agents for complex growth patterns
+                this.agents = [];
+                for (let i = 0; i < 3; i++) {
+                    this.agents.push({
+                        x: Math.floor(this.centerX),
+                        y: Math.floor(this.centerY),
+                        direction: i * 120, // 0, 120, 240 degrees
+                        state: 0
+                    });
+                }
+                
+                // Turmite rules based on identity
+                this.rules = this.generateRules();
+            }
+            
+            generateRules() {
+                // Different growth patterns for each identity
+                const patterns = {
+                    dipendente: [
+                        { onEmpty: 'paint-left', onOwn: 'right', onOther: 'back' },
+                        { onEmpty: 'paint-forward', onOwn: 'left', onOther: 'right' }
+                    ],
+                    precario: [
+                        { onEmpty: 'paint-right', onOwn: 'forward', onOther: 'left' },
+                        { onEmpty: 'forward', onOwn: 'paint-right', onOther: 'back' }
+                    ],
+                    imprenditore: [
+                        { onEmpty: 'paint-forward', onOwn: 'right', onOther: 'paint-left' },
+                        { onEmpty: 'left', onOwn: 'paint-forward', onOther: 'right' }
+                    ],
+                    straniero: [
+                        { onEmpty: 'paint-left', onOwn: 'forward', onOther: 'right' },
+                        { onEmpty: 'right', onOwn: 'paint-left', onOther: 'forward' }
+                    ],
+                    giovane: [
+                        { onEmpty: 'paint-forward', onOwn: 'left', onOther: 'paint-right' },
+                        { onEmpty: 'paint-right', onOwn: 'right', onOther: 'left' }
+                    ],
+                    pensionato: [
+                        { onEmpty: 'paint-forward', onOwn: 'forward', onOther: 'left' },
+                        { onEmpty: 'left', onOwn: 'paint-right', onOther: 'back' }
+                    ]
+                };
+                return patterns[this.identity];
+            }
+            
+            grow() {
+                const growthRate = growthRates[this.identity];
+                const capacity = carryingCapacity[this.identity];
+                
+                // Lotka-Volterra growth with interactions
+                let effectiveGrowth = growthRate;
+                
+                // Apply interactions
+                IDENTITIES.forEach(otherId => {
+                    if (otherId !== this.identity) {
+                        const interaction = interactions[`${this.identity}-${otherId}`] || 0;
+                        effectiveGrowth += interaction * (populations[otherId] / 1000);
+                    }
+                });
+                
+                // Logistic growth
+                const growthFactor = effectiveGrowth * (1 - this.population / capacity);
+                
+                // Calculate number of steps for agents based on growth
+                let agentSteps = Math.floor(Math.abs(growthFactor) * 5) + 1;
+                
+                // Move turmite agents
+                for (let step = 0; step < agentSteps; step++) {
+                    this.agents.forEach(agent => {
+                        this.moveAgent(agent, growthFactor > 0);
+                    });
+                }
+                
+                // Death based on negative growth
+                if (growthFactor < 0) {
+                    const deaths = Math.floor(Math.abs(this.population * growthFactor));
+                    for (let i = 0; i < deaths; i++) {
+                        this.removeCell();
+                    }
+                }
+                
+                // Spawn new agents if population is healthy
+                if (growthFactor > 0.3 && this.agents.length < 8) {
+                    const edge = this.getRandomEdgeCell();
+                    if (edge) {
+                        this.agents.push({
+                            x: edge.x,
+                            y: edge.y,
+                            direction: Math.floor(Math.random() * 360),
+                            state: 0
+                        });
+                    }
+                }
+                
+                // Remove agents if population is struggling
+                if (growthFactor < -0.2 && this.agents.length > 1) {
+                    this.agents.pop();
+                }
+                
+                this.population = this.cells.size;
+                this.fitness = Math.max(0, Math.min(2, 1 + growthFactor));
+            }
+            
+            moveAgent(agent, canPaint) {
+                // Get current cell state
+                const currentCell = grid[agent.y] && grid[agent.y][agent.x];
+                let cellType = 'empty';
+                if (currentCell === this.identity) cellType = 'own';
+                else if (currentCell) cellType = 'other';
+                
+                // Get rule for current state
+                const rule = this.rules[agent.state];
+                const action = rule[`on${cellType.charAt(0).toUpperCase() + cellType.slice(1)}`];
+                
+                // Execute action
+                const sector = SECTORS[this.identity];
+                const minX = sector.col * SECTOR_WIDTH;
+                const maxX = (sector.col + 1) * SECTOR_WIDTH;
+                const minY = sector.row * SECTOR_HEIGHT;
+                const maxY = (sector.row + 1) * SECTOR_HEIGHT;
+                
+                switch(action) {
+                    case 'paint-forward':
+                        if (canPaint && !currentCell) {
+                            grid[agent.y][agent.x] = this.identity;
+                            this.cells.add(`${agent.x},${agent.y}`);
+                        }
+                        this.moveForward(agent, minX, maxX, minY, maxY);
+                        break;
+                    case 'paint-left':
+                        if (canPaint && !currentCell) {
+                            grid[agent.y][agent.x] = this.identity;
+                            this.cells.add(`${agent.x},${agent.y}`);
+                        }
+                        agent.direction = (agent.direction - 90 + 360) % 360;
+                        this.moveForward(agent, minX, maxX, minY, maxY);
+                        break;
+                    case 'paint-right':
+                        if (canPaint && !currentCell) {
+                            grid[agent.y][agent.x] = this.identity;
+                            this.cells.add(`${agent.x},${agent.y}`);
+                        }
+                        agent.direction = (agent.direction + 90) % 360;
+                        this.moveForward(agent, minX, maxX, minY, maxY);
+                        break;
+                    case 'forward':
+                        this.moveForward(agent, minX, maxX, minY, maxY);
+                        break;
+                    case 'left':
+                        agent.direction = (agent.direction - 90 + 360) % 360;
+                        this.moveForward(agent, minX, maxX, minY, maxY);
+                        break;
+                    case 'right':
+                        agent.direction = (agent.direction + 90) % 360;
+                        this.moveForward(agent, minX, maxX, minY, maxY);
+                        break;
+                    case 'back':
+                        agent.direction = (agent.direction + 180) % 360;
+                        this.moveForward(agent, minX, maxX, minY, maxY);
+                        break;
+                }
+                
+                // Change state
+                agent.state = (agent.state + 1) % this.rules.length;
+            }
+            
+            moveForward(agent, minX, maxX, minY, maxY) {
+                // Calculate movement based on direction
+                const rad = agent.direction * Math.PI / 180;
+                const dx = Math.round(Math.cos(rad));
+                const dy = Math.round(Math.sin(rad));
+                
+                const newX = agent.x + dx;
+                const newY = agent.y + dy;
+                
+                // Check bounds
+                if (newX >= minX && newX < maxX && newY >= minY && newY < maxY) {
+                    agent.x = newX;
+                    agent.y = newY;
+                } else {
+                    // Bounce off walls
+                    agent.direction = (agent.direction + 180) % 360;
+                }
+            }
+            
+            getRandomEdgeCell() {
+                const edgeCells = [];
+                this.cells.forEach(cellKey => {
+                    const [x, y] = cellKey.split(',').map(Number);
+                    
+                    // Check 4 neighbors
+                    const neighbors = [[0,1], [1,0], [0,-1], [-1,0]];
+                    neighbors.forEach(([dx, dy]) => {
+                        const nx = x + dx;
+                        const ny = y + dy;
+                        
+                        const sector = SECTORS[this.identity];
+                        const minX = sector.col * SECTOR_WIDTH;
+                        const maxX = (sector.col + 1) * SECTOR_WIDTH;
+                        const minY = sector.row * SECTOR_HEIGHT;
+                        const maxY = (sector.row + 1) * SECTOR_HEIGHT;
+                        
+                        if (nx >= minX && nx < maxX && ny >= minY && ny < maxY) {
+                            if (!grid[ny] || !grid[ny][nx]) {
+                                edgeCells.push({x: nx, y: ny});
+                            }
+                        }
+                    });
+                });
+                
+                return edgeCells.length > 0 ? edgeCells[Math.floor(Math.random() * edgeCells.length)] : null;
+            }
+            
+            removeCell() {
+                if (this.cells.size <= 1) return;
+                
+                // Remove edge cells first
+                const cellArray = Array.from(this.cells);
+                cellArray.sort((a, b) => {
+                    const [ax, ay] = a.split(',').map(Number);
+                    const [bx, by] = b.split(',').map(Number);
+                    const distA = Math.sqrt((ax - this.centerX)**2 + (ay - this.centerY)**2);
+                    const distB = Math.sqrt((bx - this.centerX)**2 + (by - this.centerY)**2);
+                    return distB - distA; // Farthest first
+                });
+                
+                const toRemove = cellArray[0];
+                const [x, y] = toRemove.split(',').map(Number);
+                this.cells.delete(toRemove);
+                grid[y][x] = null;
+            }
+        }
+        
+        // Calculate Lotka-Volterra parameters based on votes
+        function calculateParameters() {
+            // Base growth rates (increased for visibility)
+            growthRates = {
+                dipendente: 0.2,
+                precario: 0.18,
+                imprenditore: 0.25,
+                straniero: 0.19,
+                giovane: 0.22,
+                pensionato: 0.05 // Slow growth instead of decline
+            };
+            
+            // Base carrying capacity (max cells in sector)
+            const sectorCapacity = SECTOR_WIDTH * SECTOR_HEIGHT;
+            carryingCapacity = {
+                dipendente: sectorCapacity * 0.6,
+                precario: sectorCapacity * 0.4,
+                imprenditore: sectorCapacity * 0.3,
+                straniero: sectorCapacity * 0.4,
+                giovane: sectorCapacity * 0.5,
+                pensionato: sectorCapacity * 0.3
+            };
+            
+            // Modify based on votes
+            if (votes[1]) { // Q1: Jobs Act
+                growthRates.dipendente += 0.05;
+                growthRates.imprenditore -= 0.08;
+                carryingCapacity.dipendente *= 1.2;
+                carryingCapacity.imprenditore *= 0.7;
+            }
+            
+            if (votes[2]) { // Q2: Small business
+                growthRates.imprenditore -= 0.06;
+                carryingCapacity.imprenditore *= 0.8;
+            }
+            
+            if (votes[3]) { // Q3: Term contracts
+                growthRates.precario -= 0.1; // Transform to employees
+                growthRates.dipendente += 0.05;
+                carryingCapacity.precario *= 0.5;
+            } else {
+                growthRates.precario += 0.05; // Perpetual precarity
+                carryingCapacity.precario *= 1.3;
+            }
+            
+            if (votes[4]) { // Q4: Safety
+                growthRates.imprenditore -= 0.03;
+            }
+            
+            if (votes[5]) { // Q5: Citizenship
+                growthRates.straniero += 0.15;
+                carryingCapacity.straniero *= 1.5;
+            } else {
+                growthRates.straniero -= 0.05;
+                carryingCapacity.straniero *= 0.7;
+            }
+            
+            // Calculate interaction matrix (α_ij in Lotka-Volterra)
+            interactions = {};
+            
+            // Key interactions
+            interactions['dipendente-imprenditore'] = votes[1] ? -0.3 : 0.2; // Dependency
+            interactions['imprenditore-dipendente'] = votes[1] ? -0.5 : 0.3;
+            
+            interactions['precario-giovane'] = -0.2; // Competition
+            interactions['giovane-precario'] = -0.2;
+            
+            interactions['precario-straniero'] = votes[3] ? -0.1 : -0.3; // Competition varies
+            interactions['straniero-precario'] = votes[3] ? -0.1 : -0.3;
+            
+            interactions['pensionato-giovane'] = 0.1; // Generation
+            interactions['giovane-pensionato'] = 0;
+            
+            // Cascade effects
+            if (votes[1] && votes[2] && votes[3]) {
+                // Triple protection = employer extinction cascade
+                interactions['imprenditore-dipendente'] = -0.8;
+                interactions['dipendente-precario'] = -0.4;
+            }
+            
+            updateRelationsDisplay();
+        }
+        
+        // Initialize turmites
+        function initializeTurmites() {
+            turmites = {};
+            populations = {};
+            
+            IDENTITIES.forEach(identity => {
+                turmites[identity] = new GrowthTurmite(identity);
+                populations[identity] = 1;
+            });
+        }
+        
+        // Update step
+        function step() {
+            // Update populations
+            IDENTITIES.forEach(identity => {
+                populations[identity] = turmites[identity].population;
+            });
+            
+            // Grow each population
+            IDENTITIES.forEach(identity => {
+                turmites[identity].grow();
+            });
+            
+            generation++;
+            updateDisplay();
+            render();
+            
+            // Check system state
+            checkSystemState();
+        }
+        
+        // Render
+        function render() {
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Redraw grid lines
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            
+            for (let i = 1; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * SECTOR_WIDTH * CELL_SIZE, 0);
+                ctx.lineTo(i * SECTOR_WIDTH * CELL_SIZE, canvas.height);
+                ctx.stroke();
+            }
+            
+            ctx.beginPath();
+            ctx.moveTo(0, SECTOR_HEIGHT * CELL_SIZE);
+            ctx.lineTo(canvas.width, SECTOR_HEIGHT * CELL_SIZE);
+            ctx.stroke();
+            
+            // Draw cells
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    const identity = grid[y][x];
+                    if (identity) {
+                        const turmite = turmites[identity];
+                        ctx.fillStyle = COLORS[identity];
+                        ctx.globalAlpha = 0.6 + turmite.fitness * 0.4;
+                        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE - 0.5, CELL_SIZE - 0.5);
+                    }
+                }
+            }
+            ctx.globalAlpha = 1;
+            
+            // Draw turmite agents
+            IDENTITIES.forEach(identity => {
+                const turmite = turmites[identity];
+                if (turmite && turmite.agents) {
+                    turmite.agents.forEach(agent => {
+                        // Draw agent as bright dot
+                        ctx.fillStyle = turmite.color;
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = turmite.color;
+                        ctx.fillRect(
+                            agent.x * CELL_SIZE - 1,
+                            agent.y * CELL_SIZE - 1,
+                            CELL_SIZE + 2,
+                            CELL_SIZE + 2
+                        );
+                        
+                        // Draw direction indicator
+                        ctx.fillStyle = '#fff';
+                        ctx.shadowBlur = 0;
+                        const rad = agent.direction * Math.PI / 180;
+                        const dx = Math.cos(rad) * CELL_SIZE * 0.5;
+                        const dy = Math.sin(rad) * CELL_SIZE * 0.5;
+                        ctx.fillRect(
+                            agent.x * CELL_SIZE + CELL_SIZE/2 + dx - 1,
+                            agent.y * CELL_SIZE + CELL_SIZE/2 + dy - 1,
+                            2,
+                            2
+                        );
+                    });
+                }
+            });
+            
+            // Draw sector labels with background for visibility
+            ctx.font = '14px Monaspace Krypton';
+            ctx.textAlign = 'center';
+            
+            IDENTITIES.forEach(identity => {
+                const sector = SECTORS[identity];
+                const x = (sector.col + 0.5) * SECTOR_WIDTH * CELL_SIZE;
+                const y = (sector.row + 0.5) * SECTOR_HEIGHT * CELL_SIZE;
+                
+                // Draw background box
+                const text = identity.toUpperCase();
+                const metrics = ctx.measureText(text);
+                const padding = 10;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(
+                    x - metrics.width / 2 - padding,
+                    y - 12 - padding,
+                    metrics.width + padding * 2,
+                    24 + padding
+                );
+                
+                // Draw border
+                ctx.strokeStyle = COLORS[identity];
+                ctx.lineWidth = 2;
+                ctx.strokeRect(
+                    x - metrics.width / 2 - padding,
+                    y - 12 - padding,
+                    metrics.width + padding * 2,
+                    24 + padding
+                );
+                
+                // Draw text
+                ctx.fillStyle = COLORS[identity];
+                ctx.fillText(text, x, y);
+            });
+        }
+        
+        // Update displays
+        function updateDisplay() {
+            document.getElementById('generation').textContent = generation;
+            
+            // Update population display
+            const popDisplay = document.getElementById('population-display');
+            popDisplay.innerHTML = IDENTITIES.map(identity => {
+                const pop = populations[identity];
+                const growth = growthRates[identity];
+                const fitness = turmites[identity].fitness;
+                
+                let growthClass = 'growth-neutral';
+                if (fitness > 1.1) growthClass = 'growth-positive';
+                else if (fitness < 0.9) growthClass = 'growth-negative';
+                
+                return `
+                    <div class="population-item">
+                        <div class="pop-identity">
+                            <div class="pop-color" style="background: ${COLORS[identity]};"></div>
+                            <div class="pop-name">${identity}</div>
+                        </div>
+                        <div class="pop-stats">
+                            <div class="pop-count">${pop}</div>
+                            <div class="pop-growth ${growthClass}">
+                                ${growth > 0 ? '+' : ''}${(growth * 100).toFixed(0)}%
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateRelationsDisplay() {
+            const relDisplay = document.getElementById('relations-display');
+            const activeRelations = [];
+            
+            // Find significant interactions
+            Object.entries(interactions).forEach(([key, value]) => {
+                if (Math.abs(value) > 0.1) {
+                    const [from, to] = key.split('-');
+                    let type = 'neutral';
+                    let description = '';
+                    
+                    if (value > 0.2) {
+                        type = 'positive';
+                        description = 'Simbiosi';
+                    } else if (value < -0.2) {
+                        type = 'negative';
+                        description = value < -0.5 ? 'Predazione' : 'Competizione';
+                    }
+                    
+                    if (type !== 'neutral') {
+                        activeRelations.push({
+                            from, to, type, value, description
+                        });
+                    }
+                }
+            });
+            
+            relDisplay.innerHTML = activeRelations.map(rel => `
+                <div class="relation-item relation-${rel.type}">
+                    <strong>${rel.from} → ${rel.to}</strong><br>
+                    ${rel.description} (${(rel.value * 100).toFixed(0)}%)
+                </div>
+            `).join('');
+        }
+        
+        function checkSystemState() {
+            let state = 'EQUILIBRIO';
+            
+            // Check extinctions
+            const extinct = IDENTITIES.filter(id => populations[id] === 0);
+            if (extinct.length > 0) {
+                state = `ESTINZIONE: ${extinct.join(', ')}`;
+            }
+            
+            // Check collapse scenarios
+            if (populations.imprenditore < 10 && generation > 50) {
+                state = 'COLLASSO ECONOMICO';
+            }
+            
+            // Check dominance
+            const total = Object.values(populations).reduce((a, b) => a + b, 0);
+            const dominant = IDENTITIES.find(id => populations[id] > total * 0.4);
+            if (dominant) {
+                state = `DOMINANZA ${dominant}`;
+            }
+            
+            document.getElementById('system-state').textContent = state;
+        }
+        
+        // Event listeners
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const q = parseInt(this.dataset.q);
+                const vote = this.dataset.vote === 'yes';
+                
+                if (votes[q] === vote) {
+                    votes[q] = null;
+                    this.classList.remove('active', 'yes', 'no');
+                } else {
+                    votes[q] = vote;
+                    document.querySelectorAll(`[data-q="${q}"]`).forEach(b => {
+                        b.classList.remove('active', 'yes', 'no');
+                    });
+                    this.classList.add('active', vote ? 'yes' : 'no');
+                }
+                
+                checkStartEnabled();
+                
+                if (Object.values(votes).every(v => v !== null)) {
+                    calculateParameters();
+                }
+            });
+        });
+        
+        function checkStartEnabled() {
+            const allVoted = Object.values(votes).every(v => v !== null);
+            document.getElementById('start-btn').disabled = !allVoted;
+            document.getElementById('step-btn').disabled = !allVoted;
+        }
+        
+        document.getElementById('start-btn').addEventListener('click', function() {
+            if (running) {
+                running = false;
+                this.textContent = 'INIZIA CRESCITA';
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+            } else {
+                running = true;
+                this.textContent = 'FERMA CRESCITA';
+                
+                if (generation === 0) {
+                    initializeTurmites();
+                }
+                
+                intervalId = setInterval(step, 200 / speed);
+            }
+        });
+        
+        document.getElementById('step-btn').addEventListener('click', function() {
+            if (running) return;
+            
+            if (generation === 0) {
+                initializeTurmites();
+            }
+            step();
+        });
+        
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            running = false;
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            
+            generation = 0;
+            initializeGrid();
+            document.getElementById('start-btn').textContent = 'INIZIA CRESCITA';
+            updateDisplay();
+        });
+        
+        document.getElementById('speed-slider').addEventListener('input', function() {
+            speed = parseFloat(this.value);
+            document.getElementById('speed-value').textContent = speed.toFixed(1);
+            
+            if (running && intervalId) {
+                clearInterval(intervalId);
+                intervalId = setInterval(step, 200 / speed);
+            }
+        });
+        
+        // Initialize
+        initializeGrid();
+        checkStartEnabled();
+    </script>
+</body>
+</html>

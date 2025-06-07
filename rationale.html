@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rationale - Referendum 2025 Hyperstition Mode</title>
+    <style>
+        @font-face {
+            font-family: 'Monaspace Krypton';
+            src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff2') format('woff2');
+        }
+        
+        body {
+            font-family: 'Monaspace Krypton', 'Courier New', monospace;
+            background: #000;
+            color: #0ff;
+            padding: 20px;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1, h2 {
+            text-align: center;
+            text-shadow: 0 0 20px #0ff;
+        }
+        
+        pre {
+            background: rgba(0,255,255,0.05);
+            border: 1px solid #0ff;
+            padding: 20px;
+            overflow-x: auto;
+            white-space: pre;
+            font-size: 14px;
+        }
+        
+        .section {
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(0,255,255,0.02);
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+        
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .matrix-table td, .matrix-table th {
+            border: 1px solid #0ff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .matrix-table th {
+            background: rgba(0,255,255,0.1);
+        }
+        
+        .positive { color: #0f0; }
+        .negative { color: #f00; }
+        .neutral { color: #ff0; }
+        
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            color: #0ff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #0ff;
+            transition: all 0.3s;
+        }
+        
+        .back-link:hover {
+            background: #0ff;
+            color: #000;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Torna ai simulatori</a>
+        
+        <h1>REFERENDUM ITALIA 2025 - ANALISI ECOSISTEMICA</h1>
+        <h2>MODELLO TURMITI COEVOLUTIVI</h2>
+        
+        <div class="section">
+            <h2>Diagramma del Sistema</h2>
+            <pre class="diagram">
+                                    ┌─────────────┐
+                                    │ COSA PUBLIC │
+                                    │      🏛️      │
+                                    └──────┬──────┘
+                                           │
+                    ┌──────────────────────┴──────────────────────┐
+                    │                                               │
+            ┌───────▼────────┐                           ┌─────────▼────────┐
+            │  IMPRENDITORI  │                           │   DIPENDENTI     │
+            │      🏢        │◄─────── Q1 Q2 Q3 ───────►│       👔         │
+            │  Growth: +25%  │         CONFLICT          │  Growth: +20%    │
+            └───────┬────────┘                           └─────────┬────────┘
+                    │                                               │
+                    │                                               │
+            ┌───────▼────────┐                           ┌─────────▼────────┐
+            │    PRECARI     │◄──────── Q3 ─────────────►│     GIOVANI      │
+            │      📄        │       COMPETITION         │       🎓         │
+            │  Growth: +18%  │                           │  Growth: +22%    │
+            └───────┬────────┘                           └─────────┬────────┘
+                    │                                               │
+                    │                                               │
+            ┌───────▼────────┐                           ┌─────────▼────────┐
+            │   STRANIERI    │◄──────── Q5 ─────────────►│   PENSIONATI     │
+            │      🌍        │       INTEGRATION         │       👴         │
+            │  Growth: +19%  │                           │  Growth: +5%     │
+            └────────────────┘                           └──────────────────┘
+            </pre>
+        </div>
+        
+        <div class="section">
+            <h2>Matrice Lotka-Volterra</h2>
+            <p>
+                <strong>dN_i/dt = r_i × N_i × (1 - N_i/K_i) + Σ(α_ij × N_j)</strong>
+            </p>
+            <p>Dove:</p>
+            <ul>
+                <li>N_i = Popolazione identità i</li>
+                <li>r_i = Tasso crescita intrinseco</li>
+                <li>K_i = Capacità portante del settore</li>
+                <li>α_ij = Coefficiente interazione i→j</li>
+            </ul>
+            
+            <table class="matrix-table">
+                <tr>
+                    <th>Da\Verso</th>
+                    <th>Dipendente</th>
+                    <th>Precario</th>
+                    <th>Imprenditore</th>
+                    <th>Straniero</th>
+                    <th>Giovane</th>
+                    <th>Pensionato</th>
+                </tr>
+                <tr>
+                    <td>Dipendente</td>
+                    <td>-</td>
+                    <td class="negative">-0.1</td>
+                    <td class="positive">+0.3*</td>
+                    <td class="negative">-0.2*</td>
+                    <td class="negative">-0.1</td>
+                    <td class="positive">+0.2</td>
+                </tr>
+                <tr>
+                    <td>Precario</td>
+                    <td class="positive">+0.3*</td>
+                    <td>-</td>
+                    <td class="negative">-0.3*</td>
+                    <td class="negative">-0.2</td>
+                    <td class="negative">-0.2</td>
+                    <td class="positive">+0.1</td>
+                </tr>
+                <tr>
+                    <td>Imprenditore</td>
+                    <td class="positive">+0.3*</td>
+                    <td class="positive">+0.2</td>
+                    <td>-</td>
+                    <td class="positive">+0.1*</td>
+                    <td class="positive">+0.2</td>
+                    <td class="neutral">0.0</td>
+                </tr>
+                <tr>
+                    <td>Straniero</td>
+                    <td class="negative">-0.2*</td>
+                    <td class="negative">-0.2</td>
+                    <td class="positive">+0.1*</td>
+                    <td>-</td>
+                    <td class="positive">+0.1</td>
+                    <td class="positive">+0.3*</td>
+                </tr>
+                <tr>
+                    <td>Giovane</td>
+                    <td class="negative">-0.1</td>
+                    <td class="negative">-0.2</td>
+                    <td class="positive">+0.2</td>
+                    <td class="positive">+0.1</td>
+                    <td>-</td>
+                    <td class="positive">+0.3</td>
+                </tr>
+                <tr>
+                    <td>Pensionato</td>
+                    <td class="positive">+0.2</td>
+                    <td class="positive">+0.1</td>
+                    <td class="neutral">0.0</td>
+                    <td class="positive">+0.3*</td>
+                    <td class="positive">+0.3</td>
+                    <td>-</td>
+                </tr>
+            </table>
+            <p><em>* = Modificato dai voti referendum</em></p>
+        </div>
+        
+        <div class="section">
+            <h2>Impatti dei Quesiti Referendari</h2>
+            
+            <h3>Q1: ARTICOLO 18 (Jobs Act) - Reintegro vs Indennizzo</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4 class="positive">SÌ:</h4>
+                    <ul>
+                        <li>Dipendenti: r +0.05, K ×1.2</li>
+                        <li>Imprenditori: r -0.08, K ×0.7</li>
+                        <li>α(dip→imp) = -0.3</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="negative">NO:</h4>
+                    <ul>
+                        <li>Status quo</li>
+                        <li>Flessibilità mantenuta</li>
+                        <li>α(dip→imp) = +0.3</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Q2: PICCOLE IMPRESE - Tetto indennizzo</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4 class="positive">SÌ:</h4>
+                    <ul>
+                        <li>Imprenditori: r -0.06, K ×0.8</li>
+                        <li>Rischio fallimenti PMI</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="negative">NO:</h4>
+                    <ul>
+                        <li>Costi prevedibili</li>
+                        <li>PMI più stabili</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Q3: CONTRATTI TERMINE - Obbligo causale</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4 class="positive">SÌ:</h4>
+                    <ul>
+                        <li>Precari: r -0.10, K ×0.5</li>
+                        <li>Dipendenti: r +0.05</li>
+                        <li>α(prec→giov) = -0.1</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="negative">NO:</h4>
+                    <ul>
+                        <li>Precari: r +0.05, K ×1.3</li>
+                        <li>Precarietà strutturale</li>
+                        <li>α(prec→giov) = -0.3</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Q4: SICUREZZA LAVORO - Responsabilità solidale</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4 class="positive">SÌ:</h4>
+                    <ul>
+                        <li>Imprenditori: r -0.03</li>
+                        <li>Costi assicurativi +15%</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="negative">NO:</h4>
+                    <ul>
+                        <li>Status quo</li>
+                        <li>Responsabilità limitata</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Q5: CITTADINANZA - Da 10 a 5 anni</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4 class="positive">SÌ:</h4>
+                    <ul>
+                        <li>Stranieri: r +0.15, K ×1.5</li>
+                        <li>α(stra→tutti) positivo</li>
+                        <li>+300k lavoratori stabili</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="negative">NO:</h4>
+                    <ul>
+                        <li>Stranieri: r -0.05, K ×0.7</li>
+                        <li>Emigrazione 23% annua</li>
+                        <li>Fuga competenze</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Scenari Emergenti</h2>
+            
+            <h3>1. FORTEZZA DEL LAVORO (Q1+Q2+Q3 = SÌ SÌ SÌ)</h3>
+            <ul>
+                <li>Imprenditori: r_eff = -0.20 → ESTINZIONE in 50 generazioni</li>
+                <li>Dipendenti: Segue a cascata → COLLASSO dopo imprenditori</li>
+                <li>Sistema: PIL -5% → DEPRESSIONE ECONOMICA</li>
+            </ul>
+            
+            <h3>2. LIBERO MERCATO (Tutti NO)</h3>
+            <ul>
+                <li>Imprenditori: r_eff = +0.35 → ESPANSIONE rapida</li>
+                <li>Precari: Loop infinito → TRAPPOLA precarietà</li>
+                <li>Giovani: Bloccati → EMIGRAZIONE massiva</li>
+            </ul>
+            
+            <h3>3. INTEGRAZIONE PROGRESSIVA (Q3+Q5 = SÌ SÌ)</h3>
+            <ul>
+                <li>Stranieri: r_eff = +0.40 → BOOM demografico</li>
+                <li>Precari→Dipendenti: Trasformazione → STABILIZZAZIONE</li>
+                <li>Sistema: Diversità +15% → INNOVAZIONE</li>
+            </ul>
+            
+            <h3>4. EQUILIBRIO OTTIMALE (Mix bilanciato)</h3>
+            <ul>
+                <li>Tutte identità: r ~ 0.15-0.25 → CRESCITA sostenibile</li>
+                <li>Interazioni: Bilanciate → COESISTENZA</li>
+                <li>Sistema: Resiliente → ANTIFRAGILE</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Indicatori Critici</h2>
+            <ul>
+                <li>Imprenditori &lt; 10% → Allarme rosso economico</li>
+                <li>Precari &gt; 40% → Instabilità sociale</li>
+                <li>Giovani &lt; 5% → Invecchiamento irreversibile</li>
+                <li>Stranieri = 0 → Chiusura culturale</li>
+            </ul>
+        </div>
+        
+        <div class="section" style="text-align: center;">
+            <p>Analisi referendum Italia 2025</p>
+            <p>Basato su: Dati ISTAT, Banca d'Italia, OCSE</p>
+            <p>Modello Lotka-Volterra per dinamiche popolazioni</p>
+            <p>Teoria degli automi cellulari (Turmiti)</p>
+        </div>
+        
+        <a href="index.html" class="back-link">← Torna ai simulatori</a>
+    </div>
+</body>
+</html>

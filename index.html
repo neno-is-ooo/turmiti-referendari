@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulatori Referendum 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d0d0d;
+            color: #d9d9d9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 90%, rgba(255, 0, 128, 0.08), transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(0, 255, 136, 0.08), transparent 50%),
+                radial-gradient(circle at 35% 65%, rgba(255, 255, 255, 0.03), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 4rem;
+        }
+
+        .simulators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .simulator-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .simulator-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .simulator-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .simulator-description {
+            font-size: 1rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .personal { border-color: #3b82f6; }
+        .personal:hover { border-color: #60a5fa; }
+        .personal .simulator-title { color: #60a5fa; }
+
+        .hyperstition { border-color: #00ff88; }
+        .hyperstition:hover { border-color: #00ff88; box-shadow: 0 0 20px rgba(0,255,136,0.3); }
+        .hyperstition .simulator-title { color: #00ff88; }
+
+        .documentation-link {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .documentation-link a {
+            color: #00ff88;
+            text-decoration: none;
+            border-bottom: 1px solid #00ff88;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .documentation-link a:hover {
+            color: #ff0080;
+            border-bottom-color: #ff0080;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Referendum 2025</h1>
+        <p class="subtitle">Simulatori Interattivi</p>
+
+        <div class="simulators-grid">
+            <a href="simulatore-personale.html" class="simulator-card personal">
+                <h2 class="simulator-title">Simulatore Personale</h2>
+                <p class="simulator-description">
+                    Esplora l'impatto del referendum sulla tua situazione specifica. 
+                    Analisi dettagliata basata su dati ufficiali e proiezioni temporali.
+                </p>
+            </a>
+
+            <a href="hyperstition-mode.html" class="simulator-card hyperstition">
+                <h2 class="simulator-title">Turmiti Referendari</h2>
+                <p class="simulator-description">
+                    Visualizzazione delle dinamiche ecosistemiche attraverso turmiti. 
+                    Pattern emergenti basati su modelli Lotka-Volterra e automi cellulari.
+                </p>
+            </a>
+        </div>
+
+        <div class="documentation-link">
+            <a href="rationale.html" target="_blank">Documentazione Tecnica</a>
+        </div>
+    </div>
+</body>
+</html>
