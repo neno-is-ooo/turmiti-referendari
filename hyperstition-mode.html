@@ -285,11 +285,24 @@
         .relation-neutral { border-left-color: #ff0; }
         
         @media (max-width: 768px) {
+            body::before {
+                display: none; /* Hide gradient on mobile for performance */
+            }
+            
             .control-panel {
-                width: calc(100% - 20px);
-                left: 10px;
-                max-height: 40vh;
-                font-size: 0.9rem;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: 100%;
+                max-height: 50vh;
+                border-radius: 20px 20px 0 0;
+                padding: 15px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                transition: transform 0.3s ease;
+                box-shadow: 0 -4px 20px rgba(0,255,136,0.3);
             }
             
             .stats-panel {
@@ -297,41 +310,93 @@
             }
             
             .relations-panel {
-                left: 10px;
-                right: 10px;
-                font-size: 0.8rem;
-                max-height: 25vh;
-                overflow-y: auto;
+                display: none; /* Hide on mobile to save space */
             }
             
             #main-canvas {
-                width: 90vw;
-                height: 90vw;
-                max-width: 400px;
-                max-height: 400px;
+                position: fixed;
+                top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100vw - 20px);
+                height: calc(50vh - 20px);
+                max-width: none;
+                max-height: none;
             }
             
             .title {
-                font-size: 1.1rem;
+                font-size: 1rem;
+                margin-bottom: 10px;
+                text-align: center;
             }
             
-            .vote-item {
-                margin: 5px 0;
-                padding: 5px;
+            .subtitle {
+                display: none;
             }
             
-            .relations-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .controls {
+            .vote-grid {
+                display: flex;
+                flex-direction: column;
                 gap: 5px;
             }
             
-            .control-btn {
+            .vote-item {
+                margin: 0;
+                padding: 8px;
+            }
+            
+            .vote-label {
+                font-size: 0.75rem;
+                margin-bottom: 3px;
+            }
+            
+            .vote-buttons {
+                display: flex;
+                gap: 5px;
+            }
+            
+            .vote-btn {
                 padding: 8px;
                 font-size: 0.8rem;
             }
+            
+            .controls {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            
+            .control-btn {
+                padding: 10px;
+                font-size: 0.75rem;
+            }
+            
+            #reset-btn {
+                grid-column: 1 / -1;
+            }
+            
+            .speed-control {
+                margin: 10px 0;
+            }
+            
+            .info-display {
+                display: none; /* Hide on mobile */
+            }
+            
+            .mobile-handle {
+                display: block;
+                width: 50px;
+                height: 4px;
+                background: #00ff88;
+                border-radius: 2px;
+                margin: 0 auto 10px;
+                opacity: 0.5;
+            }
+        }
+        
+        .mobile-handle {
+            display: none;
         }
         
         .info-display {
@@ -355,7 +420,8 @@
 <body>
     <canvas id="main-canvas"></canvas>
     
-    <div class="control-panel">
+    <div class="control-panel" id="control-panel">
+        <div class="mobile-handle" id="mobile-handle"></div>
         <h1 class="title">TURMITI REFERENDARI</h1>
         <p class="subtitle">
             Ogni identità cresce nel suo quadrante.<br>
@@ -447,8 +513,8 @@
     <script>
         // Configuration
         const isMobile = window.innerWidth <= 768;
-        const CELL_SIZE = isMobile ? 3 : 5;
-        const GRID_SIZE = isMobile ? 100 : 120; // Smaller grid for mobile
+        const CELL_SIZE = isMobile ? 2 : 5;
+        const GRID_SIZE = isMobile ? 80 : 120; // Much smaller grid for mobile
         const SECTOR_WIDTH = GRID_SIZE / 3;
         const SECTOR_HEIGHT = GRID_SIZE / 2;
         
@@ -1174,6 +1240,54 @@
         // Initialize
         initializeGrid();
         checkStartEnabled();
+        
+        // Mobile touch handling
+        if (isMobile) {
+            const panel = document.getElementById('control-panel');
+            let startY = 0;
+            let currentY = 0;
+            let isDragging = false;
+            
+            const handle = document.getElementById('mobile-handle');
+            
+            handle.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].clientY;
+                isDragging = true;
+            });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                
+                currentY = e.touches[0].clientY;
+                const deltaY = currentY - startY;
+                
+                if (deltaY > 0) {
+                    panel.style.transform = `translateY(${deltaY}px)`;
+                }
+            });
+            
+            document.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const deltaY = currentY - startY;
+                if (deltaY > 100) {
+                    panel.style.transform = 'translateY(calc(100% - 60px))';
+                } else {
+                    panel.style.transform = 'translateY(0)';
+                }
+            });
+            
+            // Tap canvas to show/hide controls
+            canvas.addEventListener('click', () => {
+                const currentTransform = panel.style.transform;
+                if (currentTransform === 'translateY(calc(100% - 60px))') {
+                    panel.style.transform = 'translateY(0)';
+                } else {
+                    panel.style.transform = 'translateY(calc(100% - 60px))';
+                }
+            });
+        }
     </script>
 </body>
 </html>
